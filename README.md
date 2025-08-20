@@ -50,9 +50,6 @@ The goal was to design and implement the main screens of a **WhatsApp-style mobi
 | ------------------------------------------ | -------------------------------------------- |
 | ![Story Dark](screen_shots/story_dark.jpg) | ![Story Light](screen_shots/story_light.jpg) |
 
-🎥 Demo Video
-(https://drive.google.com/file/d/1qRkz_iACA5ub6Y7DB_009oezYyPYeq8f/view?usp=drive_link)
-
 ## 🧩 Project Structure
 
 ```plaintext
