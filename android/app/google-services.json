@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "203319822137",
+    "project_id": "whats-app-554ea",
+    "storage_bucket": "whats-app-554ea.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:203319822137:android:50c7aeaa80a11386d70ae8",
+        "android_client_info": {
+          "package_name": "com.example.whatsapp_clone"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvWiGPPNoxb7NWL6TZStLNTGlwp2eUKE0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

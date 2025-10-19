@@ -40,7 +40,7 @@ class ChatTile extends StatelessWidget {
               ? NetworkImage(item.avatarUrl)
               : AssetImage(item.avatarUrl) as ImageProvider)
           : const AssetImage('assets/images/img_placeholder.png'),
-      backgroundColor: cs.surfaceVariant,
+      backgroundColor: cs.surfaceContainerHighest,
     );
 
     return InkWell(
