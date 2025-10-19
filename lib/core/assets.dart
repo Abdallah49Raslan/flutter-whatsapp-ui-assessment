@@ -21,11 +21,10 @@ class AppIcons {
   // ===== Tabs =====
   static const IconData chats = Symbols.chat_bubble_rounded;
   static const IconData status =
-      Symbols.radio_button_checked_rounded; // بديل لحلقة الحالة
+      Symbols.radio_button_checked_rounded; 
   static const IconData calls = Symbols.call_rounded;
 }
 
-/// تظل مخزّنة في assets/images وتُستخدم بـ Image.asset
 class AppImages {
   static const String placeholder = 'assets/images/img_placeholder.jpg';
   static const String avatar01 = 'assets/images/avatars/img_avatar_01.jpg';

@@ -1,7 +1,9 @@
 import 'dart:async';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:whatsapp_clone/data/repo/auth_rep.dart';
+
 import 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
@@ -9,32 +11,41 @@ class AuthCubit extends Cubit<AuthState> {
   late final StreamSubscription _sub;
 
   AuthCubit(this._repo) : super(const AuthState()) {
-    _sub = _repo.onAuthStateChanged.listen((u) {
-      emit(state.copyWith(user: u, loading: false, error: null));
+    emit(const AuthState(status: AuthStatus.loading));
+    _sub = _repo.onAuthStateChanged.listen((User? u) {
+      if (u == null) {
+        emit(const AuthState(status: AuthStatus.unauthenticated));
+      } else {
+        emit(AuthState(status: AuthStatus.authenticated, user: u));
+      }
     });
   }
 
-  Future<void> sendOtp(String phone) async {
-    emit(state.copyWith(loading: true, error: null));
-    final r = await _repo.sendOtp(phone);
-    if (r.left != null) {
-      emit(state.copyWith(loading: false, error: r.left));
+  Future<void> login(String email, String password) async {
+    emit(const AuthState(status: AuthStatus.loading));
+    final err = await _repo.login(email, password);
+    if (err != null) emit(AuthState(status: AuthStatus.error, message: err));
+  }
+
+  Future<void> register(String email, String password) async {
+    emit(const AuthState(status: AuthStatus.loading));
+    final err = await _repo.register(email, password);
+    if (err != null) emit(AuthState(status: AuthStatus.error, message: err));
+  }
+
+  Future<void> resetPassword(String email) async {
+    emit(const AuthState(status: AuthStatus.loading));
+    final err = await _repo.sendPasswordReset(email);
+    if (err != null) {
+      emit(AuthState(status: AuthStatus.error, message: err));
     } else {
-      emit(state.copyWith(loading: false, verificationId: r.right));
+      emit(const AuthState(status: AuthStatus.unauthenticated));
     }
   }
 
-  Future<void> verifyCode(String verificationId, String smsCode) async {
-    emit(state.copyWith(loading: true, error: null));
-    final r = await _repo.verifyOtp(verificationId, smsCode);
-    if (r.left != null) {
-      emit(state.copyWith(loading: false, error: r.left));
-    } else {
-      emit(state.copyWith(loading: false, user: r.right));
-    }
+  Future<void> logout() async {
+    await _repo.logout();
   }
-
-  Future<void> signOut() => _repo.signOut();
 
   @override
   Future<void> close() async {

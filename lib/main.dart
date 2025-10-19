@@ -1,48 +1,39 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:whatsapp_clone/core/theme.dart';
 import 'package:whatsapp_clone/data/repo/auth_rep.dart';
-import 'firebase_options.dart';
+import 'package:whatsapp_clone/home_gate.dart';
+
 import 'features/auth/cubit/auth_cubit.dart';
-import 'features/auth/cubit/auth_state.dart';
-import 'features/auth/views/phone_input_page.dart';
+import 'features/auth/views/login_page.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  runApp(
-    MultiRepositoryProvider(
-      providers: [
-        RepositoryProvider(create: (_) => AuthRepo(FirebaseAuth.instance, FirebaseFirestore.instance)),
-      ],
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider(create: (c) => AuthCubit(c.read<AuthRepo>())),
-        ],
-        child: const WhatsAppCloneApp(),
-      ),
-    ),
-  );
+  runApp(const WhatsAppClone());
 }
 
-class WhatsAppCloneApp extends StatelessWidget {
-  const WhatsAppCloneApp({super.key});
+class WhatsAppClone extends StatelessWidget {
+  const WhatsAppClone({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: BlocBuilder<AuthCubit, AuthState>(
-        builder: (context, state) {
-          // لو user != null ودخّل OTP، ممكن تروح لـ Home
-          if (state.user != null) {
-            // TODO: غيّرها لـ HomePage لما نجهزها
-            return const Scaffold(body: Center(child: Text('Logged in ✅')));
-          }
-          return const PhoneInputPage();
-        },
+    return RepositoryProvider(
+      create: (_) => AuthRepo(),
+      child: BlocProvider(
+        create: (c) => AuthCubit(c.read<AuthRepo>()),
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.dark(), // من core/theme.dart
+          darkTheme: AppTheme.light(), // من core/theme.dart
+          themeMode: ThemeMode.system,
+          routes: {
+            '/': (_) => const LoginPage(),
+            '/home': (_) => const HomeGate(), // بدّلها لما تجهّز Home الحقيقي
+          },
+        ),
       ),
     );
   }

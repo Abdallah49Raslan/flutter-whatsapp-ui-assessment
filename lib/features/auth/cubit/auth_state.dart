@@ -1,32 +1,22 @@
-// lib/features/auth/cubit/auth_state.dart
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+enum AuthStatus { unknown, authenticated, unauthenticated, loading, error }
+
 class AuthState extends Equatable {
-  final bool loading;
-  final String? verificationId;
+  final AuthStatus status;
   final User? user;
-  final String? error;
+  final String? message;
 
-  const AuthState({
-    this.loading = false,
-    this.verificationId,
-    this.user,
-    this.error,
-  });
+  const AuthState({this.status = AuthStatus.unknown, this.user, this.message});
 
-  AuthState copyWith({
-    bool? loading,
-    String? verificationId,
-    User? user,
-    String? error,
-  }) => AuthState(
-        loading: loading ?? this.loading,
-        verificationId: verificationId ?? this.verificationId,
+  AuthState copyWith({AuthStatus? status, User? user, String? message}) =>
+      AuthState(
+        status: status ?? this.status,
         user: user ?? this.user,
-        error: error,
+        message: message,
       );
 
   @override
-  List<Object?> get props => [loading, verificationId, user, error];
+  List<Object?> get props => [status, user, message];
 }
