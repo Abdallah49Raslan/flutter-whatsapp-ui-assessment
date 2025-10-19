@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone/data/models/message_item.dart';
-import 'package:whatsapp_clone/presentation/widgets/chat_bubble.dart';
+import 'package:whatsapp_clone/features/messages/widgets/chat_bubble.dart';
 
 class MessagesList extends StatelessWidget {
   final List<MessageItem> items;

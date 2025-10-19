@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:whatsapp_clone/core/colors.dart';
 import 'package:whatsapp_clone/core/spacing.dart';
 import 'package:whatsapp_clone/data/models/story_item.dart';
-import 'package:whatsapp_clone/presentation/widgets/story_progress_bar.dart';
+import 'package:whatsapp_clone/features/stories/widgets/story_progress_bar.dart';
 
 class StoryViewer extends StatefulWidget {
   final StoryItem item;

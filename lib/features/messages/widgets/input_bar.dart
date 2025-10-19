@@ -56,7 +56,6 @@ class _InputBarState extends State<InputBar> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            // حاوية الحقل + أيقونات داخلية
             Expanded(
               child: Container(
                 padding: EdgeInsets.symmetric(

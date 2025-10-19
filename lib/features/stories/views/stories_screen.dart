@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:whatsapp_clone/data/mock/stories_mock.dart';
 import 'package:whatsapp_clone/data/models/story_item.dart';
-import 'package:whatsapp_clone/presentation/screens/stories/stories_grid.dart';
-import 'package:whatsapp_clone/presentation/screens/stories/story_viewer.dart';
+import 'package:whatsapp_clone/features/stories/widgets/stories_grid.dart';
+import 'package:whatsapp_clone/features/stories/widgets/story_viewer.dart';
 
 class StoriesScreen extends StatelessWidget {
   const StoriesScreen({super.key});
@@ -22,6 +21,6 @@ class StoriesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StoriesGrid(items: storiesMock, onOpen: (it) => _open(context, it));
+    return StoriesGrid(items: [], onOpen: (it) => _open(context, it));
   }
 }

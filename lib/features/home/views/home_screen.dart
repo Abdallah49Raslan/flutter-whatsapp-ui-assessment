@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone/data/models/chat_item.dart';
-import 'package:whatsapp_clone/presentation/screens/home/chats_list.dart';
-import 'package:whatsapp_clone/presentation/screens/home/home_appbar.dart';
-import 'package:whatsapp_clone/presentation/screens/stories/stories_screen.dart';
+import 'package:whatsapp_clone/features/chat_list/views/chat_list.dart';
+import 'package:whatsapp_clone/features/home/widgets/home_appbar.dart';
+import 'package:whatsapp_clone/features/stories/views/stories_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
