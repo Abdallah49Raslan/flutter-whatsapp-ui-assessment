@@ -1,4 +1,5 @@
 // lib/data/repo/auth_repo.dart
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -13,17 +14,33 @@ class AuthRepo {
 
   Future<Either<String>> sendOtp(String phone) async {
     try {
-      String? verId;
+      final completer = Completer<String>();
+
       await _auth.verifyPhoneNumber(
         phoneNumber: phone,
-        codeSent: (id, _) => verId = id,
-        verificationCompleted: (cred) async {
-          await _auth.signInWithCredential(cred);
+        // لو الجهاز قدر يعمل auto-verification (instant validation/auto-retrieval)
+        verificationCompleted: (PhoneAuthCredential cred) async {
+          try {
+            await _auth.signInWithCredential(cred);
+            // في الحالة دي مش هنحتاج OTP، لكن علشان نكمل الفلو ندي قيمة placeholder
+            if (!completer.isCompleted) completer.complete('AUTO_VERIFIED');
+          } catch (e) {
+            if (!completer.isCompleted) completer.completeError(e);
+          }
         },
-        verificationFailed: (e) => throw e,
-        codeAutoRetrievalTimeout: (id) => verId ??= id,
+        verificationFailed: (FirebaseAuthException e) {
+          if (!completer.isCompleted) completer.completeError(e);
+        },
+        codeSent: (String verificationId, int? resendToken) {
+          if (!completer.isCompleted) completer.complete(verificationId);
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {
+          // أحيانًا بيوصل الـid هنا بس برضه ينفع نستخدمه
+          if (!completer.isCompleted) completer.complete(verificationId);
+        },
       );
-      if (verId == null) return (left: 'Could not get verificationId', right: null);
+
+      final verId = await completer.future.timeout(const Duration(seconds: 60));
       return (right: verId, left: null);
     } catch (e) {
       return (left: e.toString(), right: null);
@@ -32,6 +49,14 @@ class AuthRepo {
 
   Future<Either<User>> verifyOtp(String verificationId, String smsCode) async {
     try {
+      // لو جه AUTO_VERIFIED، مش هنحتاج SMS code
+      if (verificationId == 'AUTO_VERIFIED') {
+        final user = _auth.currentUser;
+        if (user != null) {
+          await _ensureUserDocument(user);
+          return (right: user, left: null);
+        }
+      }
       final cred = PhoneAuthProvider.credential(
         verificationId: verificationId,
         smsCode: smsCode,
